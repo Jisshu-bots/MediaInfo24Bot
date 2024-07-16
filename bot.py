@@ -1,9 +1,22 @@
 #SUNRISES24BOTS
 #TG:@SUNRISES_24
+
+import os
+from flask import Flask, request
 from pyrogram import Client
 from config import *
-import os, requests
 
+# Initialize Flask app
+app = Flask(__name__)
+
+# Initialize Pyrogram Client
+app_client = Client(
+    "MetaMorpher",
+    api_id=config.api_id,
+    api_hash=config.api_hash,
+    bot_token=config.bot_token,
+    plugins={"root": "main"}
+)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -11,29 +24,10 @@ def webhook():
     app_client.process_update(update)
     return "OK", 200
 
-class Bot(Client):
-    if not os.path.isdir(DOWNLOAD_LOCATION):
-        os.makedirs(DOWNLOAD_LOCATION)
-
-    def __init__(self):
-        super().__init__(
-            name="MetaMorpher",
-            api_id=API_ID,
-            api_hash=API_HASH,
-            bot_token=BOT_TOKEN,
-            workers=100,
-            plugins={"root": "main"},
-            sleep_threshold=10,
-        )
-    async def start(self):
-        await super().start()
-        me = await self.get_me()      
-        print(f"{me.first_name} | @{me.username} 𝚂𝚃𝙰𝚁𝚃𝙴𝙳...⚡️")
-        
-        
-    async def stop(self, *args):
-       await super().stop()      
-       print("Bot Restarting........")
-
-bot = Bot()
-bot.run()
+if __name__ == '__main__':
+    if not os.path.isdir(config.DOWNLOAD_LOCATION):
+        os.makedirs(config.DOWNLOAD_LOCATION)
+    
+    app_client.start()
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    app_client.stop()
