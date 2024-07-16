@@ -1,21 +1,28 @@
+
 import os
-import subprocess
-from flask import Flask, request
 import datetime
+import subprocess
 from pyrogram import Client, filters
+from html_telegraph_poster import TelegraphPoster
 from config import DOWNLOAD_LOCATION
 from helper.utlis import get_mediainfo
 from html_telegraph_poster import TelegraphPoster
 
-# Initialize Flask app
-app = Flask(__name__)
-
-# Initialize Telegraph
 telegraph = TelegraphPoster(use_api=True)
 telegraph.create_api_token("MediaInfoBot")
 
+def get_mediainfo(file_path):
+    process = subprocess.Popen(
+        ["mediainfo", file_path, "--Output=HTML"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    stdout, stderr = process.communicate()
+    if process.returncode != 0:
+        raise Exception(f"Error getting media info: {stderr.decode().strip()}")
+    return stdout.decode().strip()
 
-@app_client.on_message(filters.command("mediainfo") & filters.private)
+@Client.on_message(filters.command("mediainfo") & filters.private)
 async def mediainfo_handler(client, message):
     if not message.reply_to_message or (not message.reply_to_message.document and not message.reply_to_message.video):
         await message.reply_text("Please reply to a document or video to get media info.")
@@ -30,7 +37,7 @@ async def mediainfo_handler(client, message):
     try:
         # Download the media file to a local location
         if media:
-            file_path = await client.download_media(media, file_name=os.path.join(DOWNLOAD_LOCATION, media.file_name))
+            file_path = await client.download_media(media, file_name=os.path.join(config.DOWNLOAD_LOCATION, media.file_name))
         else:
             raise ValueError("No valid media found in the replied message.")
 
@@ -50,7 +57,7 @@ async def mediainfo_handler(client, message):
         )
 
         # Save the media info to a file
-        info_file_path = os.path.join(DOWNLOAD_LOCATION, f"{os.path.splitext(media.file_name)[0]}_info.html")
+        info_file_path = os.path.join(config.DOWNLOAD_LOCATION, f"{os.path.splitext(media.file_name)[0]}_info.html")
         with open(info_file_path, "w") as info_file:
             info_file.write(media_info_html)
 
@@ -86,8 +93,7 @@ async def mediainfo_handler(client, message):
             os.remove(info_file_path)
 
 
-
 if __name__ == '__main__':
     app = Client("my_bot", bot_token=BOT_TOKEN)
     app.run()
-    app.run(port=5000)
+    
