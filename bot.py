@@ -4,7 +4,7 @@
 import os
 from flask import Flask, request
 from pyrogram import Client
-from config import *
+from config
 
 # Initialize Flask app
 app = Flask(__name__)
