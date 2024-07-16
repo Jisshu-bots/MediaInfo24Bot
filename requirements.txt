@@ -1,0 +1,5 @@
+Flask 
+pyrogram 
+html_telegraph_poster
+lxml_html_clean
+requests
