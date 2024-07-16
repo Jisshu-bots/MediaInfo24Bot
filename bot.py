@@ -4,7 +4,7 @@
 import os
 from flask import Flask, request
 from pyrogram import Client
-from config
+from config import *
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -12,9 +12,9 @@ app = Flask(__name__)
 # Initialize Pyrogram Client
 app_client = Client(
     "MetaMorpher",
-    api_id=config.api_id,
-    api_hash=config.api_hash,
-    bot_token=config.bot_token,
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=BOT_TOKEN,
     plugins={"root": "main"}
 )
 
