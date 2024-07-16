@@ -5,7 +5,7 @@ import subprocess
 from pyrogram import Client, filters
 from html_telegraph_poster import TelegraphPoster
 from config import DOWNLOAD_LOCATION
-from helper.utlis import get_mediainfo
+from helper.utils import get_mediainfo
 from html_telegraph_poster import TelegraphPoster
 
 telegraph = TelegraphPoster(use_api=True)
