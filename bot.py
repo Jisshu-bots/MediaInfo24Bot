@@ -2,8 +2,14 @@
 #TG:@SUNRISES_24
 from pyrogram import Client
 from config import *
-import os
+import os, requests
 
+
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    update = request.get_json()
+    app_client.process_update(update)
+    return "OK", 200
 
 class Bot(Client):
     if not os.path.isdir(DOWNLOAD_LOCATION):
