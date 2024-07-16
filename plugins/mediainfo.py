@@ -84,5 +84,9 @@ async def mediainfo_handler(client, message):
         if 'info_file_path' in locals() and os.path.exists(info_file_path):
             os.remove(info_file_path)
 
+
+
 if __name__ == '__main__':
+    app = Client("my_bot", bot_token=BOT_TOKEN)
+    app.run()
     app.run(port=5000)
