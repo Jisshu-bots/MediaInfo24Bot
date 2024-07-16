@@ -25,8 +25,8 @@ def webhook():
     return "OK", 200
 
 if __name__ == '__main__':
-    if not os.path.isdir(config.DOWNLOAD_LOCATION):
-        os.makedirs(config.DOWNLOAD_LOCATION)
+    if not os.path.isdir(DOWNLOAD_LOCATION):
+        os.makedirs(DOWNLOAD_LOCATION)
     
     app_client.start()
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
